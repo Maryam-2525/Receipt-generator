@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-
+    <title>Sales Receipt Generator</title>
+    <meta name="description" content="Generate professional sales receipts easily with our free online receipt generator. Create, customize, and print business receipts in seconds.">
+
+    <!-- CSS Files -->
+    
+    <link rel="stylesheet" href="src/styles/main.css">
+    <link rel="stylesheet" href="src/styles/variables.css">
+
+    
+    <link rel="stylesheet" href="src/components/business-info/business-info.css">
+    <link rel="stylesheet" href="src/components/customer-info/customer-info.css">
+    <link rel="stylesheet" href="src/components/item-list/item-list.css">
+    <link rel="stylesheet" href="src/components/receipt-preview/receipt-preview.css">
+    <link rel="stylesheet" href="src/components/settings/settings-panel.css">
+</head>
+<body>
+    <div id="app">
+        <header class="app-header">
+            <h1>Sales Receipt Generator</h1>
+            <button id="openSettings" class="btn-settings">
+                <span class="settings-icon">⚙️</span>
+                Settings
+            </button>
+        </header>
+        
+        <main class="app-container">
+            <div class="receipt-builder">
+                <div id="business-info"></div>
+                <div id="customer-info"></div>
+                <div id="item-list"></div>
+            </div>
+            
+            <div class="receipt-preview-container">
+                <div id="receipt-preview"></div>
+                <div class="receipt-actions">
+                    <button id="printReceipt" class="btn btn-outline">Print Receipt</button>
+                    <button id="share-receipt" class="btn btn-share">Share</button>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- JavaScript Files - Note the order! -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script>
+        window.jsPDF = window.jspdf.jsPDF;
+    </script>
+    <script src="src/components/business-info/business-info.js"></script>
+    <script src="src/components/customer-info/customer-info.js"></script>
+    <script src="src/components/item-list/item-list.js"></script>
+    <script src="src/components/receipt-preview/receipt-preview.js"></script>
+    <script src="src/components/settings/settings-panel.js"></script>
+    <script src="src/components/share-receipt/share-receipt.js"></script>
+    <script src="src/js/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,133 @@
+.item-list-section {
+    background-color: var(--surface-color);
+    padding: var(--spacing-lg);
+    border-radius: var(--border-radius-md);
+    margin-bottom: var(--spacing-lg);
+}
+
+.section-title {
+    color: var(--text-primary);
+    margin-bottom: var(--spacing-md);
+    font-size: 1.25rem;
+    font-weight: 600;
+}
+
+.add-item-form {
+    margin-bottom: var(--spacing-lg);
+    background-color: var(--background-color);
+    padding: var(--spacing-md);
+    border-radius: var(--border-radius-sm);
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: 2fr 80px 120px;
+    gap: var(--spacing-md);
+}
+
+.btn-add-container {
+    margin-top: var(--spacing-md);
+    display: flex;
+    justify-content: flex-end;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xs);
+}
+
+.form-group label {
+    font-weight: 600;
+    color: var(--text-primary);
+    font-size: 0.9rem;
+}
+
+.form-group input {
+    padding: var(--spacing-sm);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius-sm);
+    font-size: 1rem;
+}
+
+input[type="number"]#itemPrice::-webkit-outer-spin-button,
+input[type="number"]#itemPrice::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+input[type="number"]#itemPrice {
+    -moz-appearance: textfield;
+}
+
+.btn-add-item {
+    background-color: var(--accent-dark);
+    color: white;
+    border: none;
+    padding: 0.5rem 2rem;
+    border-radius: 3px;
+    cursor: pointer;
+    height: 38px;
+    font-weight: 600;
+}
+
+.items-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: var(--spacing-md);
+}
+
+.items-table th,
+.items-table td {
+    padding: var(--spacing-sm);
+    text-align: left;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.items-table th {
+    background-color: var(--background-color);
+    font-weight: 600;
+    color: var(--text-primary);
+    font-size: 0.9rem;
+}
+
+.text-center {
+    text-align: center;
+}
+
+.text-right {
+    text-align: right;
+}
+
+.btn-delete {
+    background-color: var(--accent-color);
+    color: white;
+    border: none;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 1.2rem;
+    line-height: 1;
+    padding: 0;
+}
+
+.empty-state {
+    text-align: center;
+    padding: var(--spacing-xl);
+    color: var(--text-secondary);
+}
+
+tfoot td {
+    font-size: 1.1rem;
+    background-color: var(--background-color);
+}
+
+@media (max-width: 768px) {
+    .form-row {
+        grid-template-columns: 1fr;
+    }
+
+    .btn-add-item {
+        width: 100%;
+    }
+}

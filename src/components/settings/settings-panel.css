@@ -1,0 +1,52 @@
+.settings-panel {
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 400px;
+    height: 100vh;
+    background: var(--surface-color);
+    box-shadow: var(--shadow-lg);
+    padding: var(--spacing-lg);
+    transform: translateX(100%);
+    transition: transform 0.3s ease;
+}
+
+.settings-panel.open {
+    transform: translateX(0);
+}
+
+.settings-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--spacing-lg);
+}
+
+.settings-group {
+    margin-bottom: var(--spacing-lg);
+}
+
+.setting-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--spacing-sm) 0;
+}
+
+.settings-actions {
+    display: flex;
+    gap: var(--spacing-md);
+    margin-top: var(--spacing-xl);
+}
+
+.setting-item.disabled {
+    opacity: 0.5;
+    pointer-events: none;
+}
+
+.setting-item input[type="number"] {
+    width: 80px;
+    padding: var(--spacing-xs);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius-sm);
+}

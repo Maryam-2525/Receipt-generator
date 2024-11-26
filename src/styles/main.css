@@ -1,0 +1,380 @@
+/* Base Styles */
+body {
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    color: var(--text-primary);
+    background-color: var(--bg-secondary);
+    line-height: 1.5;
+    margin: 0;
+    padding: 0;
+    -webkit-font-smoothing: antialiased;
+}
+
+/* Header Styles */
+.app-header {
+    background-color: var(--accent-dark);
+    padding: var(--spacing-sm) var(--spacing-md);
+    color: white;
+    box-shadow: var(--shadow-sm);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.app-header h1 {
+    font-size: var(--text-lg);
+    margin: 0;
+}
+
+/* Main Container */
+.app-container {
+    max-width: 100%;
+    margin: var(--spacing-md) auto;
+    padding: 0 var(--spacing-sm);
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+}
+
+/* Receipt Builder Section */
+.receipt-builder {
+    background: var(--bg-primary);
+    padding: var(--spacing-md);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-md);
+    order: 2; /* Move builder below preview on mobile */
+}
+
+/* Receipt Preview Section */
+.receipt-preview-container {
+    background: var(--bg-primary);
+    padding: var(--spacing-md);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-md);
+    order: 1; /* Show preview first on mobile */
+}
+
+/* Form Elements */
+.form-group {
+    margin-bottom: var(--spacing-md);
+}
+
+label {
+    font-size: var(--text-sm);
+}
+
+input, select, textarea {
+    padding: var(--spacing-sm);
+    font-size: var(--text-base);
+    width: 100%;
+    box-sizing: border-box;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    transition: all var(--transition-fast);
+}
+
+input:focus, select:focus, textarea:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+/* Table Styles */
+.items-table {
+    width: 100%;
+    overflow-x: auto;
+    display: block;
+}
+
+.items-table th,
+.items-table td {
+    min-width: 100px;
+    white-space: nowrap;
+}
+
+/* Share Dropdown */
+.share-dropdown-menu {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin: var(--spacing-sm);
+    border-radius: var(--radius-lg);
+    transform: translateY(0);
+    animation: slideUp 0.3s ease-out;
+    background: var(--bg-primary);
+    box-shadow: var(--shadow-md);
+    padding: var(--spacing-md);
+}
+
+.social-media-options {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--spacing-sm);
+    margin-bottom: var(--spacing-sm);
+}
+
+.save-options {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--spacing-sm);
+}
+
+.share-option {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--spacing-md);
+    border: none;
+    background: var(--bg-secondary);
+    cursor: pointer;
+    border-radius: var(--radius-md);
+    transition: all var(--transition-fast);
+}
+
+.share-option:hover {
+    background: var(--bg-tertiary);
+    transform: translateY(-2px);
+}
+
+.share-icon {
+    width: 24px;
+    height: 24px;
+    object-fit: contain;
+}
+
+.share-divider {
+    height: 1px;
+    background-color: var(--border-color);
+    margin: var(--spacing-md) 0;
+}
+
+/* Buttons */
+.btn {
+    width: 100%;
+    margin-bottom: var(--spacing-sm);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--spacing-sm) var(--spacing-lg);
+    border-radius: var(--radius-md);
+    font-weight: 500;
+    transition: all var(--transition-fast);
+    cursor: pointer;
+    border: none;
+}
+
+.btn-primary {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+.btn-primary:hover {
+    background-color: var(--primary-dark);
+    transform: translateY(-1px);
+}
+
+.btn-secondary {
+    background-color: var(--accent-color);
+    color: white;
+}
+
+.btn-secondary:hover {
+    background-color: var(--accent-dark);
+    transform: translateY(-1px);
+}
+
+/* Helper Classes */
+.hide-mobile {
+    display: none;
+}
+
+/* Responsive Design - Tablet (768px) */
+@media (min-width: 768px) {
+    .app-header {
+        padding: var(--spacing-md) var(--spacing-xl);
+    }
+
+    .app-header h1 {
+        font-size: var(--text-xl);
+    }
+
+    .app-container {
+        padding: 0 var(--spacing-lg);
+        margin: var(--spacing-lg) auto;
+    }
+
+    .btn {
+        width: auto;
+    }
+
+    .share-dropdown-menu {
+        position: absolute;
+        width: auto;
+        margin: 0;
+    }
+
+    .hide-mobile {
+        display: block;
+    }
+
+    .hide-desktop {
+        display: none;
+    }
+}
+
+/* Responsive Design - Desktop (1024px) */
+@media (min-width: 1024px) {
+    .app-container {
+        max-width: 1200px;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: var(--spacing-xl);
+        margin: var(--spacing-xl) auto;
+        padding: 0 var(--spacing-lg);
+    }
+
+    .receipt-builder {
+        order: 1;
+    }
+
+    .receipt-preview-container {
+        order: 2;
+        position: sticky;
+        top: calc(var(--spacing-xl) + 60px);
+    }
+
+    .app-header h1 {
+        font-size: var(--text-2xl);
+    }
+}
+
+/* Responsive Design - Large Desktop (1280px) */
+@media (min-width: 1280px) {
+    .app-container {
+        gap: calc(var(--spacing-xl) * 2);
+    }
+}
+
+/* Responsive Design - Small Mobile (480px) */
+@media (max-width: 480px) {
+    .receipt-builder,
+    .receipt-preview-container {
+        padding: var(--spacing-md);
+    }
+
+    .items-table {
+        display: block;
+        overflow-x: auto;
+        white-space: nowrap;
+    }
+
+    input, select, textarea {
+        padding: calc(var(--spacing-sm) - 2px);
+    }
+
+    .receipt-actions {
+        display: flex;
+        flex-direction: column;
+        gap: var(--spacing-sm);
+    }
+
+    .receipt-actions .btn {
+        width: 100%;
+    }
+}
+
+/* Print Styles */
+@media print {
+    .app-header,
+    .receipt-builder,
+    .receipt-actions {
+        display: none;
+    }
+
+    .receipt-preview-container {
+        position: static;
+        box-shadow: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .receipt-content {
+        box-shadow: none;
+        page-break-inside: avoid;
+    }
+}
+
+/* Accessibility */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+}
+
+/* Animation */
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(100%);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Button Container */
+.receipt-actions {
+    display: flex;
+    gap: 12px;
+    margin-top: var(--spacing-md);
+}
+
+/* Base Button Styles */
+.btn {
+    flex: 1;
+    height: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 24px;
+    border-radius: 6px;
+    font-weight: 500;
+    font-size: 15px;
+    transition: all 0.2s ease;
+    cursor: pointer;
+}
+
+/* Print Button (Outline Style) */
+.btn-outline {
+    background-color: white;
+    border: 1.5px solid var(--accent-dark);
+    color: var(--accent-dark);
+}
+
+.btn-outline:hover {
+    background-color: var(--accent-dark);
+    color: white;
+}
+
+/* Share Button */
+.btn-share {
+    background-color: var(--accent-dark);
+    color: white;
+    border: none;
+}
+
+.btn-share:hover {
+    opacity: 0.9;
+    transform: translateY(-1px);
+}
+
+/* Responsive Design */
+@media (max-width: 480px) {
+    .receipt-actions {
+        flex-direction: column;
+    }
+}
