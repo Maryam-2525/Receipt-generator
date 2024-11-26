@@ -4,10 +4,9 @@
     "homepage": "https://maryam-2525.github.io/Receipt-generator/",
     "scripts": {
         "start": "live-server src --port=3000",
-        "clean": "if exist dist rmdir /s /q dist",
-        "build": "npm run clean && mkdir dist && xcopy /s /e /i src\\* dist",
+        "build": "mkdir dist && xcopy /s /e /i src\\* dist",
         "predeploy": "npm run build",
-        "deploy": "gh-pages -d dist"
+        "deploy": "gh-pages --dist dist --branch gh-pages --message 'Deploy to GitHub Pages'"
     },
     "devDependencies": {
         "gh-pages": "^6.0.0",
