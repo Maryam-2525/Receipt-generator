@@ -1,14 +1,16 @@
 {
     "name": "receipt-generator",
     "version": "1.0.0",
-    "description": "A professional receipt generator application",
-    "main": "src/js/main.js",
+    "homepage": "https://maryam-2525.github.io/Receipt-generator/",
     "scripts": {
-        "start": "live-server --port=8080 --entry-file=public/index.html"
+        "start": "live-server src --port=3000",
+        "clean": "if exist dist rmdir /s /q dist",
+        "build": "npm run clean && mkdir dist && xcopy /s /e /i src\\* dist",
+        "predeploy": "npm run build",
+        "deploy": "gh-pages -d dist"
     },
-    "author": "Maryam Shehu",
-    "license": "ISC",
     "devDependencies": {
+        "gh-pages": "^6.0.0",
         "live-server": "^1.2.2"
     }
 }

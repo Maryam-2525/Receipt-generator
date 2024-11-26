@@ -1,0 +1,312 @@
+.receipt-preview {
+    background: white;
+    padding: var(--spacing-xl);
+    border-radius: var(--border-radius-md);
+    box-shadow: var(--shadow-md);
+    position: relative;
+    overflow: hidden;
+}
+
+/* Watermark */
+.receipt-watermark {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) rotate(-45deg);
+    font-size: 4em;
+    opacity: 0.03;
+    pointer-events: none;
+    white-space: nowrap;
+}
+
+/* Business Header */
+.business-header {
+    text-align: center;
+    margin-bottom: var(--spacing-xl);
+}
+
+.business-logo {
+    max-width: 150px;
+    height: auto;
+    margin-bottom: var(--spacing-md);
+}
+
+.receipt-title {
+    text-align: left;
+    margin-bottom: 10px;
+}
+
+.receipt-title h2 {
+    font-weight: bold;
+    font-size: 1.2rem;
+    margin: 0;
+}
+
+.receipt-border {
+    height: 2px;
+    background: linear-gradient(to right, transparent, var(--primary-color), transparent);
+    margin: var(--spacing-sm) 0;
+}
+
+/* Customer & Payment Info */
+.customer-grid,
+.payment-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--spacing-md);
+    margin-top: var(--spacing-md);
+}
+
+.customer-field,
+.payment-field {
+    display: flex;
+    gap: var(--spacing-sm);
+}
+
+.label {
+    font-weight: 600;
+    color: var(--text-secondary);
+}
+
+/* Items Table */
+.items-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: var(--spacing-lg) 0;
+}
+
+.items-table th,
+.items-table td {
+    padding: var(--spacing-sm);
+    text-align: left;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.items-table th {
+    background-color: var(--background-color);
+    font-weight: 600;
+}
+
+/* Totals Section */
+.totals-section {
+    margin-left: auto;
+    width: 300px;
+    margin-top: var(--spacing-lg);
+}
+
+.total-row {
+    display: flex;
+    justify-content: space-between;
+    padding: var(--spacing-xs) 0;
+}
+
+.grand-total {
+    font-weight: bold;
+    font-size: 1.2em;
+    border-top: 2px solid var(--border-color);
+    margin-top: var(--spacing-sm);
+    padding-top: var(--spacing-sm);
+}
+
+.amount-in-words {
+    margin-top: var(--spacing-md);
+    font-style: italic;
+    color: var(--text-secondary);
+}
+
+/* Terms & Notes */
+.terms-conditions,
+.receipt-notes {
+    margin-top: var(--spacing-xl);
+    font-size: 0.9em;
+    color: var(--text-secondary);
+}
+
+.terms-conditions ol {
+    padding-left: var(--spacing-lg);
+    margin-top: var(--spacing-sm);
+}
+
+/* Signature Section */
+.signature-section {
+    display: flex;
+    justify-content: space-between;
+    margin-top: var(--spacing-xl);
+    padding-top: var(--spacing-lg);
+}
+
+.signature-box {
+    text-align: center;
+    width: 200px;
+}
+
+.signature-line {
+    border-bottom: 1px solid var(--border-color);
+    margin-bottom: var(--spacing-sm);
+}
+
+/* Footer */
+.receipt-footer-content {
+    margin-top: var(--spacing-xl);
+    text-align: center;
+    color: var(--text-secondary);
+}
+
+.powered-by {
+    font-size: 0.8em;
+    margin-top: var(--spacing-sm);
+}
+
+.receipt-copy {
+    font-size: 0.9em;
+    font-weight: bold;
+    margin-top: var(--spacing-sm);
+}
+
+/* QR Code */
+.qr-code {
+    position: absolute;
+    bottom: var(--spacing-lg);
+    right: var(--spacing-lg);
+    opacity: 0.8;
+}
+
+/* Print Styles */
+@media print {
+    .receipt-preview {
+        box-shadow: none;
+        padding: 0;
+    }
+
+    .receipt-actions {
+        display: none;
+    }
+
+    .qr-code {
+        opacity: 1;
+    }
+}
+
+.receipt-header {
+    text-align: center;
+    margin-bottom: 25px;
+}
+
+.business-name {
+    font-size: 1.1rem;
+    font-weight: normal;
+    margin: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.business-contact {
+    font-size: 0.9rem;
+    line-height: 1.4;
+}
+
+.business-contact p {
+    margin: 2px 0;
+}
+
+.receipt-info {
+    text-align: left;
+    margin-top: 15px;
+    margin-bottom: 15px;
+    line-height: 1.6;
+}
+
+.receipt-info div {
+    margin-bottom: 3px;
+}
+
+.customer-info {
+    margin-top: 15px;
+    margin-bottom: 15px;
+    line-height: 1.6;
+}
+
+.customer-info p {
+    margin: 3px 0;
+}
+
+.receipt-footer {
+    text-align: center;
+    margin-top: 25px;
+    margin-bottom: 15px;
+}
+
+.thank-you-message {
+    font-weight: 600;
+    margin: 0;
+    font-size: 0.95rem;
+}
+
+.share-actions {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.share-dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.btn-share {
+    background-color: var(--accent-color);
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+.share-options {
+    display: none;
+    position: absolute;
+    background-color: white;
+    min-width: 160px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    border-radius: 4px;
+    z-index: 1000;
+    top: 100%;
+    right: 0;
+    margin-top: 5px;
+}
+
+.share-dropdown:hover .share-options {
+    display: block;
+}
+
+.share-options button {
+    width: 100%;
+    padding: 12px 16px;
+    border: none;
+    background: none;
+    text-align: left;
+    cursor: pointer;
+    color: var(--text-primary);
+}
+
+.share-options button:hover {
+    background-color: #f1f1f1;
+}
+
+.receipt-actions {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.btn-primary {
+    background-color: var(--primary-color);
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 600;
+}
