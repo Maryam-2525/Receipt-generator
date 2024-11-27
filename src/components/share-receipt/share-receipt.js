@@ -328,35 +328,97 @@ class ShareReceipt {
             throw new Error('Receipt content element not found');
         }
 
-        // Get the actual dimensions of the content
+        // Get the actual dimensions
         const contentWidth = receiptContent.offsetWidth;
         const contentHeight = receiptContent.offsetHeight;
 
         console.log('Creating canvas');
         const canvas = await html2canvas(receiptContent, {
-            scale: 2, // Increased resolution
+            scale: 2,
             backgroundColor: '#ffffff',
             logging: true,
             useCORS: true,
             windowWidth: contentWidth,
             windowHeight: contentHeight,
-            scrollY: -window.scrollY, // Handle scrolled content
+            scrollY: -window.scrollY,
             height: contentHeight,
             width: contentWidth,
             onclone: (clonedDoc) => {
-                // Ensure the cloned element has the full height
                 const clonedContent = clonedDoc.querySelector('.receipt-content');
                 if (clonedContent) {
-                    clonedContent.style.height = `${contentHeight}px`;
-                    // Remove any max-height constraints
-                    clonedContent.style.maxHeight = 'none';
-                    // Ensure all parent elements are fully expanded
-                    let parent = clonedContent.parentElement;
-                    while (parent) {
-                        parent.style.height = 'auto';
-                        parent.style.maxHeight = 'none';
-                        parent = parent.parentElement;
+                    // Apply PDF-specific styles to the cloned content
+                    clonedContent.style.padding = '20px';
+                    clonedContent.style.backgroundColor = '#ffffff';
+                    clonedContent.style.boxSizing = 'border-box';
+                    clonedContent.style.fontFamily = 'Arial, sans-serif';
+                    
+                    // Style the business info section
+                    const businessInfo = clonedContent.querySelector('.business-info');
+                    if (businessInfo) {
+                        businessInfo.style.textAlign = 'center';
+                        businessInfo.style.marginBottom = '20px';
+                        businessInfo.style.padding = '10px';
+                        businessInfo.style.borderBottom = '2px solid #eee';
                     }
+
+                    // Style the customer info section
+                    const customerInfo = clonedContent.querySelector('.customer-info');
+                    if (customerInfo) {
+                        customerInfo.style.marginBottom = '20px';
+                        customerInfo.style.padding = '10px';
+                    }
+
+                    // Style the items table/list
+                    const itemList = clonedContent.querySelector('.item-list');
+                    if (itemList) {
+                        itemList.style.width = '100%';
+                        itemList.style.borderCollapse = 'collapse';
+                        itemList.style.marginBottom = '20px';
+                        
+                        // Style table headers and cells
+                        const cells = itemList.querySelectorAll('th, td');
+                        cells.forEach(cell => {
+                            cell.style.padding = '8px';
+                            cell.style.borderBottom = '1px solid #ddd';
+                            cell.style.textAlign = cell.tagName === 'TH' ? 'left' : 'right';
+                        });
+                    }
+
+                    // Style the totals section
+                    const totals = clonedContent.querySelector('.totals');
+                    if (totals) {
+                        totals.style.marginTop = '20px';
+                        totals.style.paddingTop = '10px';
+                        totals.style.borderTop = '2px solid #eee';
+                        
+                        // Align total amounts to the right
+                        const totalAmounts = totals.querySelectorAll('.amount');
+                        totalAmounts.forEach(amount => {
+                            amount.style.textAlign = 'right';
+                            amount.style.fontWeight = 'bold';
+                        });
+                    }
+
+                    // Add a footer with timestamp
+                    const footer = document.createElement('div');
+                    footer.style.marginTop = '30px';
+                    footer.style.padding = '10px';
+                    footer.style.borderTop = '1px solid #eee';
+                    footer.style.fontSize = '12px';
+                    footer.style.color = '#666';
+                    footer.style.textAlign = 'center';
+                    footer.innerHTML = `Generated on ${new Date().toLocaleString()}`;
+                    clonedContent.appendChild(footer);
+
+                    // Ensure all text is visible
+                    const allText = clonedContent.querySelectorAll('*');
+                    allText.forEach(el => {
+                        el.style.color = '#000000';
+                        if (window.getComputedStyle(el).fontSize) {
+                            const size = parseInt(window.getComputedStyle(el).fontSize);
+                            if (size < 12) el.style.fontSize = '12px';
+                        }
+                    });
                 }
             }
         });
@@ -368,12 +430,10 @@ class ShareReceipt {
             format: 'a4'
         });
 
-        const imgData = canvas.toDataURL('image/png');
+        const imgData = canvas.toDataURL('image/png', 1.0);
         const pdfWidth = pdf.internal.pageSize.getWidth();
-        // Calculate height maintaining aspect ratio
         const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
 
-        // If content is too long for one page, split it across multiple pages
         if (pdfHeight > pdf.internal.pageSize.getHeight()) {
             const pageHeight = pdf.internal.pageSize.getHeight();
             let heightLeft = pdfHeight;
@@ -390,7 +450,6 @@ class ShareReceipt {
                 page++;
             }
         } else {
-            // If content fits on one page
             pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
         }
         
