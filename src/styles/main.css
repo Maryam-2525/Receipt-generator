@@ -301,6 +301,9 @@ input:focus, select:focus, textarea:focus {
     .receipt-content {
         box-shadow: none;
         page-break-inside: avoid;
+        height: auto !important;
+        max-height: none !important;
+        overflow: visible !important;
     }
 }
 
@@ -377,4 +380,11 @@ input:focus, select:focus, textarea:focus {
     .receipt-actions {
         flex-direction: column;
     }
+}
+
+.receipt-content {
+    /* Remove any height/max-height restrictions */
+    height: auto !important;
+    max-height: none !important;
+    overflow: visible !important;
 }

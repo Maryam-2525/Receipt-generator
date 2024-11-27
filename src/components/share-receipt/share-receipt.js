@@ -328,11 +328,37 @@ class ShareReceipt {
             throw new Error('Receipt content element not found');
         }
 
+        // Get the actual dimensions of the content
+        const contentWidth = receiptContent.offsetWidth;
+        const contentHeight = receiptContent.offsetHeight;
+
         console.log('Creating canvas');
         const canvas = await html2canvas(receiptContent, {
-            scale: 2,
+            scale: 2, // Increased resolution
             backgroundColor: '#ffffff',
-            logging: true // Enable html2canvas logging
+            logging: true,
+            useCORS: true,
+            windowWidth: contentWidth,
+            windowHeight: contentHeight,
+            scrollY: -window.scrollY, // Handle scrolled content
+            height: contentHeight,
+            width: contentWidth,
+            onclone: (clonedDoc) => {
+                // Ensure the cloned element has the full height
+                const clonedContent = clonedDoc.querySelector('.receipt-content');
+                if (clonedContent) {
+                    clonedContent.style.height = `${contentHeight}px`;
+                    // Remove any max-height constraints
+                    clonedContent.style.maxHeight = 'none';
+                    // Ensure all parent elements are fully expanded
+                    let parent = clonedContent.parentElement;
+                    while (parent) {
+                        parent.style.height = 'auto';
+                        parent.style.maxHeight = 'none';
+                        parent = parent.parentElement;
+                    }
+                }
+            }
         });
 
         console.log('Creating PDF');
@@ -344,9 +370,29 @@ class ShareReceipt {
 
         const imgData = canvas.toDataURL('image/png');
         const pdfWidth = pdf.internal.pageSize.getWidth();
+        // Calculate height maintaining aspect ratio
         const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
-        
-        pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+
+        // If content is too long for one page, split it across multiple pages
+        if (pdfHeight > pdf.internal.pageSize.getHeight()) {
+            const pageHeight = pdf.internal.pageSize.getHeight();
+            let heightLeft = pdfHeight;
+            let position = 0;
+            let page = 1;
+
+            while (heightLeft >= 0) {
+                if (page > 1) {
+                    pdf.addPage();
+                }
+                pdf.addImage(imgData, 'PNG', 0, position, pdfWidth, pdfHeight);
+                heightLeft -= pageHeight;
+                position -= pageHeight;
+                page++;
+            }
+        } else {
+            // If content fits on one page
+            pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+        }
         
         console.log('Generating PDF blob');
         return pdf.output('blob');
