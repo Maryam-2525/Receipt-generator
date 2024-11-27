@@ -126,86 +126,127 @@ class ShareReceipt {
 
     async shareToWhatsApp() {
         try {
-            // Generate the image blob
-            const imageBlob = await this.generateImageBlob();
+            // Generate the PDF first since it's more reliable for sharing
+            const pdfBlob = await this.generatePDFBlob();
             
-            // For mobile devices
-            if (/Android|iPhone/i.test(navigator.userAgent)) {
-                // Try Web Share API first
-                if (navigator.share) {
-                    await navigator.share({
-                        files: [new File([imageBlob], 'receipt.png', { type: 'image/png' })],
+            if (this.isMobileDevice()) {
+                // For mobile devices, use the Web Share API if available
+                if (navigator.share && navigator.canShare) {
+                    const file = new File([pdfBlob], 'receipt.pdf', { type: 'application/pdf' });
+                    const shareData = {
+                        files: [file],
                         title: 'Receipt',
-                    });
-                } else {
-                    // Fallback to WhatsApp URL scheme
-                    const imageUrl = URL.createObjectURL(imageBlob);
-                    window.location.href = `whatsapp://send?text=Here's your receipt`;
+                        text: 'Here is your receipt'
+                    };
+
+                    if (navigator.canShare(shareData)) {
+                        await navigator.share(shareData);
+                        return;
+                    }
                 }
-            } else {
-                // For desktop - download the image and open WhatsApp Web
-                const imageUrl = URL.createObjectURL(imageBlob);
+                
+                // Fallback for mobile: open WhatsApp with a message
+                const text = "I'd like to share a receipt with you";
+                const whatsappUrl = `whatsapp://send?text=${encodeURIComponent(text)}`;
+                window.location.href = whatsappUrl;
+                
+                // Download the PDF as well since we can't directly attach it
+                const url = URL.createObjectURL(pdfBlob);
                 const a = document.createElement('a');
-                a.href = imageUrl;
-                a.download = 'receipt.png';
+                a.href = url;
+                a.download = 'receipt.pdf';
+                document.body.appendChild(a);
                 a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+                
+                alert('The receipt has been downloaded. Please send it as a file in WhatsApp.');
+            } else {
+                // For desktop
+                const url = URL.createObjectURL(pdfBlob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'receipt.pdf';
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
                 
                 // Open WhatsApp Web
                 window.open('https://web.whatsapp.com/', '_blank');
+                alert('1. Open WhatsApp Web\n2. Select a chat\n3. Upload the downloaded receipt file');
             }
         } catch (error) {
             console.error('Error sharing to WhatsApp:', error);
-            alert('To share on WhatsApp: \n1. Save the image \n2. Open WhatsApp \n3. Share the saved image');
-            await this.shareAsImage(); // Fallback to regular image download
+            alert('Unable to share to WhatsApp. The receipt will be downloaded instead.');
+            await this.shareAsPDF();
         }
     }
 
     async shareToInstagram() {
         try {
-            // Generate the image blob
             const imageBlob = await this.generateImageBlob();
             
-            // For mobile devices
-            if (/Android|iPhone/i.test(navigator.userAgent)) {
+            if (this.isMobileDevice()) {
+                // Try using the Web Share API first
                 if (navigator.share) {
+                    const file = new File([imageBlob], 'receipt.png', { type: 'image/png' });
                     await navigator.share({
-                        files: [new File([imageBlob], 'receipt.png', { type: 'image/png' })],
-                        title: 'Receipt',
+                        files: [file],
+                        title: 'Receipt'
                     });
                 } else {
-                    throw new Error('Direct sharing not available');
+                    // Fallback to downloading and opening Instagram
+                    this.downloadImage(imageBlob);
+                    window.location.href = 'instagram://';
+                    alert('Please upload the downloaded image to Instagram');
                 }
             } else {
-                // For desktop - download the image and show instructions
-                await this.shareAsImage();
-                alert('To share on Instagram: \n1. Open Instagram \n2. Create a new post \n3. Select the downloaded image');
+                // For desktop
+                this.downloadImage(imageBlob);
+                window.open('https://www.instagram.com/', '_blank');
+                alert('1. Open Instagram\n2. Click on the + icon to create a new post\n3. Upload the downloaded receipt image');
             }
         } catch (error) {
             console.error('Error sharing to Instagram:', error);
-            alert('To share on Instagram: \n1. Save the image \n2. Open Instagram \n3. Create a new post with the saved image');
-            await this.shareAsImage(); // Fallback to regular image download
+            alert('Unable to share directly to Instagram. The receipt will be downloaded instead.');
+            await this.shareAsImage();
         }
     }
 
     async generateImageBlob() {
-        // Hide any buttons or elements you don't want in the image
+        const receiptContent = this.receiptElement.querySelector('.receipt-content');
+        if (!receiptContent) {
+            throw new Error('Receipt content not found');
+        }
+
+        // Hide share buttons temporarily
         const buttons = this.receiptElement.querySelectorAll('.receipt-actions');
         buttons.forEach(btn => btn.style.display = 'none');
 
         try {
-            const canvas = await html2canvas(this.receiptElement.querySelector('.receipt-content'), {
+            const canvas = await html2canvas(receiptContent, {
                 scale: 2,
                 backgroundColor: '#ffffff',
                 logging: false,
                 useCORS: true,
-                allowTaint: true
+                allowTaint: true,
+                onclone: (clonedDoc) => {
+                    // Additional cleanup of the cloned document if needed
+                    const clonedContent = clonedDoc.querySelector('.receipt-content');
+                    if (clonedContent) {
+                        // Remove any unwanted elements from the clone
+                        const unwantedElements = clonedContent.querySelectorAll('.no-print, .receipt-actions');
+                        unwantedElements.forEach(el => el.remove());
+                    }
+                }
             });
 
-            return new Promise(resolve => {
+            return new Promise((resolve) => {
                 canvas.toBlob(resolve, 'image/png', 1.0);
             });
         } finally {
-            // Restore hidden elements
+            // Restore hidden buttons
             buttons.forEach(btn => btn.style.display = '');
         }
     }
