@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Sales Receipt Generator</title>
     <meta name="description" content="Generate professional sales receipts easily with our free online receipt generator. Create, customize, and print business receipts in seconds.">
 
@@ -34,7 +34,11 @@
             </div>
             
             <div class="receipt-preview-container">
-                <div id="receipt-preview"></div>
+                <div id="receipt-preview">
+                    <div class="receipt-content">
+                        <!-- Your receipt content should be here -->
+                    </div>
+                </div>
                 <div class="receipt-actions">
                     <button id="printReceipt" class="btn btn-outline">Print Receipt</button>
                     <button id="share-receipt" class="btn btn-share">Share</button>
@@ -48,6 +52,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script>
         window.jsPDF = window.jspdf.jsPDF;
+        console.log('jsPDF initialized:', !!window.jsPDF);
     </script>
     <script src="components/business-info/business-info.js"></script>
     <script src="components/customer-info/customer-info.js"></script>

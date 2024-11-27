@@ -126,61 +126,82 @@ class ShareReceipt {
 
     async shareToWhatsApp() {
         try {
-            // Generate the PDF first since it's more reliable for sharing
-            const pdfBlob = await this.generatePDFBlob();
+            console.log('Starting WhatsApp share...');
             
-            if (this.isMobileDevice()) {
-                // For mobile devices, use the Web Share API if available
-                if (navigator.share && navigator.canShare) {
-                    const file = new File([pdfBlob], 'receipt.pdf', { type: 'application/pdf' });
-                    const shareData = {
-                        files: [file],
-                        title: 'Receipt',
-                        text: 'Here is your receipt'
-                    };
+            // Generate the PDF blob
+            console.log('Generating PDF...');
+            const pdfBlob = await this.generatePDFBlob();
+            console.log('PDF blob generated:', pdfBlob);
 
-                    if (navigator.canShare(shareData)) {
+            if (this.isMobileDevice()) {
+                console.log('Mobile device detected');
+                
+                // Create the file object
+                const file = new File([pdfBlob], 'receipt.pdf', { type: 'application/pdf' });
+                const shareData = {
+                    files: [file],
+                    title: 'Receipt',
+                    text: 'Here is your receipt'
+                };
+
+                // Check if Web Share API is supported and can share files
+                if (navigator.share && navigator.canShare && navigator.canShare(shareData)) {
+                    console.log('Web Share API available and can share files');
+                    try {
                         await navigator.share(shareData);
+                        console.log('Share successful');
                         return;
+                    } catch (shareError) {
+                        console.log('Share failed, falling back to WhatsApp direct:', shareError);
                     }
                 }
+
+                // Fallback to WhatsApp direct share
+                console.log('Using WhatsApp direct share fallback');
+                // Download the PDF first
+                this.downloadPDF(pdfBlob);
                 
-                // Fallback for mobile: open WhatsApp with a message
-                const text = "I'd like to share a receipt with you";
-                const whatsappUrl = `whatsapp://send?text=${encodeURIComponent(text)}`;
-                window.location.href = whatsappUrl;
+                // Then open WhatsApp
+                setTimeout(() => {
+                    const text = 'Please find the receipt I just downloaded';
+                    const whatsappUrl = `whatsapp://send?text=${encodeURIComponent(text)}`;
+                    window.location.href = whatsappUrl;
+                }, 1000); // Small delay to ensure download starts first
                 
-                // Download the PDF as well since we can't directly attach it
-                const url = URL.createObjectURL(pdfBlob);
-                const a = document.createElement('a');
-                a.href = url;
-                a.download = 'receipt.pdf';
-                document.body.appendChild(a);
-                a.click();
-                document.body.removeChild(a);
-                URL.revokeObjectURL(url);
-                
-                alert('The receipt has been downloaded. Please send it as a file in WhatsApp.');
             } else {
-                // For desktop
-                const url = URL.createObjectURL(pdfBlob);
-                const a = document.createElement('a');
-                a.href = url;
-                a.download = 'receipt.pdf';
-                document.body.appendChild(a);
-                a.click();
-                document.body.removeChild(a);
-                URL.revokeObjectURL(url);
-                
-                // Open WhatsApp Web
-                window.open('https://web.whatsapp.com/', '_blank');
-                alert('1. Open WhatsApp Web\n2. Select a chat\n3. Upload the downloaded receipt file');
+                console.log('Desktop device detected');
+                // Desktop fallback
+                this.downloadPDF(pdfBlob);
+                setTimeout(() => {
+                    window.open('https://web.whatsapp.com/', '_blank');
+                    alert('The receipt has been downloaded.\n1. Open WhatsApp Web\n2. Select a chat\n3. Click the attachment icon\n4. Upload the downloaded receipt');
+                }, 1000);
             }
         } catch (error) {
-            console.error('Error sharing to WhatsApp:', error);
-            alert('Unable to share to WhatsApp. The receipt will be downloaded instead.');
-            await this.shareAsPDF();
+            console.error('Error in shareToWhatsApp:', error);
+            alert(`Sharing failed: ${error.message}\nThe receipt will be downloaded instead.`);
+            try {
+                const pdfBlob = await this.generatePDFBlob();
+                this.downloadPDF(pdfBlob);
+            } catch (downloadError) {
+                console.error('Download fallback failed:', downloadError);
+                alert('Unable to download the receipt. Please try again.');
+            }
         }
+    }
+
+    // New helper method for downloading PDF
+    downloadPDF(blob) {
+        console.log('Downloading PDF...');
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'receipt.pdf';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+        console.log('Download initiated');
     }
 
     async shareToInstagram() {
@@ -301,22 +322,33 @@ class ShareReceipt {
     }
 
     async generatePDFBlob() {
-        const canvas = await html2canvas(this.receiptElement.querySelector('.receipt-content'), {
+        console.log('Getting receipt content');
+        const receiptContent = this.receiptElement.querySelector('.receipt-content');
+        if (!receiptContent) {
+            throw new Error('Receipt content element not found');
+        }
+
+        console.log('Creating canvas');
+        const canvas = await html2canvas(receiptContent, {
             scale: 2,
-            backgroundColor: '#ffffff'
+            backgroundColor: '#ffffff',
+            logging: true // Enable html2canvas logging
         });
 
-        const imgData = canvas.toDataURL('image/png');
+        console.log('Creating PDF');
         const pdf = new jsPDF({
             orientation: 'portrait',
             unit: 'mm',
             format: 'a4'
         });
 
+        const imgData = canvas.toDataURL('image/png');
         const pdfWidth = pdf.internal.pageSize.getWidth();
         const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
         
         pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+        
+        console.log('Generating PDF blob');
         return pdf.output('blob');
     }
 }
