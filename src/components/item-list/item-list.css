@@ -130,4 +130,70 @@ tfoot td {
     .btn-add-item {
         width: 100%;
     }
+
+    /* Restructure table for mobile */
+    .items-table {
+        width: 100%;
+    }
+
+    .items-table thead {
+        display: none; /* Hide table headers on mobile */
+    }
+
+    .items-table, 
+    .items-table tbody, 
+    .items-table tr, 
+    .items-table td {
+        display: block;
+        width: 100%;
+    }
+
+    .items-table tr {
+        margin-bottom: var(--spacing-md);
+        padding: var(--spacing-sm);
+        background-color: var(--background-color);
+        border-radius: var(--border-radius-sm);
+    }
+
+    .items-table td {
+        text-align: right;
+        padding: var(--spacing-xs) 0;
+        border-bottom: none;
+    }
+
+    .items-table td::before {
+        content: attr(data-label);
+        float: left;
+        font-weight: 600;
+        color: var(--text-primary);
+    }
+
+    /* Ensure proper display for print */
+    @media print {
+        .items-table {
+            display: table;
+            width: 100%;
+        }
+
+        .items-table thead {
+            display: table-header-group;
+        }
+
+        .items-table tr {
+            display: table-row;
+        }
+
+        .items-table td {
+            display: table-cell;
+            text-align: left;
+        }
+
+        .items-table td::before {
+            display: none;
+        }
+
+        .item-list-section {
+            page-break-inside: avoid;
+        }
+    }
 }
